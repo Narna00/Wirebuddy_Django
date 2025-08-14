@@ -1,0 +1,99 @@
+{% extends "partials/dashboard-base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<section class="dashboard-section body-collapse pay step step-2">
+  <div class="overlay pt-120">
+    <div class="container-fruid">
+      <div class="main-content">
+        <div class="head-area d-flex align-items-center justify-content-between">
+          <h4>Withdraw Money</h4>
+          <div class="icon-area">
+            <img src="{% static 'assets1/images/icon/support.png' %}" alt="icon">
+          </div>
+        </div>
+        <div class="choose-recipient">
+          <div class="step-area">
+            <span class="mdr">Step 1 of 2</span>
+            <h5>Enter Withdrawal Details</h5>
+          </div>
+        </div>
+
+        <form action="{% url 'core:withdraw' %}" method="POST">
+          {% csrf_token %}
+          <div class="send-banance">
+            <span class="mdr">Amount</span>
+            <div class="input-area">
+              <input
+                class="xxlr"
+                onkeyup="updateWithBalance()"
+                placeholder="{{ request.user.account.account_balance|intcomma }}"
+                type="number"
+                step="0.01"
+                name="amount"
+                id="withdraw-amount"
+                required
+              >
+              <span class="currency">GHS</span>
+            </div>
+            <p>Available Balance <b>₵{{ request.user.account.account_balance|intcomma }}</b></p>
+            <p id="withdraw-new-balance"></p>
+            <p class="text-danger" id="withdraw-error"></p>
+          </div>
+
+          <div class="send-banance pt-0 mt-0">
+            <span class="mdr">Mobile Money Number</span>
+            <div class="input-area">
+              <input class="xxlr" type="text" name="mobile_money_number" placeholder="e.g. 0244123456" required>
+            </div>
+          </div>
+
+          <div class="send-banance pt-0 mt-0">
+            <span class="mdr">Account PIN</span>
+            <div class="input-area">
+              <input class="xxlr" type="password" name="pin" placeholder="Your 4-digit PIN" required>
+            </div>
+          </div>
+
+          <script>
+            function updateWithBalance() {
+              const avail = parseFloat("{{ request.user.account.account_balance }}");
+              const amt   = parseFloat(document.getElementById('withdraw-amount').value) || 0;
+              const newBal = avail - amt;
+              const nb    = document.getElementById('withdraw-new-balance');
+              const err   = document.getElementById('withdraw-error');
+
+              if (newBal < 0) {
+                nb.innerHTML = `New Balance <b style="color:red;">₵₵{avail.toLocaleString()}</b>`;
+                err.textContent = "Insufficient funds";
+              } else {
+                nb.innerHTML = `New Balance <b>₵₵{newBal.toLocaleString()}</b>`;
+                err.textContent = "";
+              }
+            }
+          </script>
+
+          <ul class="total-fees">
+            <li>Processing Fee</li>
+            <li>GHS 0.00</li>
+          </ul>
+
+          <ul class="total-fees pay">
+            <li><h5>Amount to Withdraw</h5></li>
+            <li><h5 id="withdraw-total">GHS 0.00</h5></li>
+          </ul>
+
+          <div class="footer-area mt-40">
+            <a href="{% url 'account:account' %}">Cancel</a>
+            <button
+              type="submit"
+              style="padding:10px 30px;border-radius:10px;background:rgb(98,0,255);color:#fff;"
+              class="active"
+            >Submit Withdrawal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

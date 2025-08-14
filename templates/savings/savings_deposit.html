@@ -1,0 +1,39 @@
+{% extends 'partials/dashboard-base.html' %}
+
+{% load humanize %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h2 class="h5 mb-0">Deposit to "{{ goal.name }}"</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <strong>Current Balance:</strong> ${{ goal.current_amount|intcomma }}<br>
+                        <strong>Target:</strong> ${{ goal.target_amount|intcomma }}
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_amount" class="form-label">Deposit Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                {{ form.amount }}
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success">Deposit</button>
+                            <a href="{% url 'core:savings_goals' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

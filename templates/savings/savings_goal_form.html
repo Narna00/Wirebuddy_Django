@@ -1,0 +1,53 @@
+{% extends 'partials/dashboard-base.html' %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h2 class="h5 mb-0">{% if goal %}Edit Goal{% else %}Create New Goal{% endif %}</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_name" class="form-label">Goal Name</label>
+                            <input type="text" name="name" class="form-control" id="id_name" 
+                                   value="{{ form.name.value|default_if_none:'' }}" required>
+                            {% if form.name.errors %}
+                                <div class="text-danger">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_target_amount" class="form-label">Target Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" name="target_amount" class="form-control" 
+                                       id="id_target_amount" step="0.01" min="0.01"
+                                       value="{{ form.target_amount.value|default_if_none:'' }}" required>
+                            </div>
+                            {% if form.target_amount.errors %}
+                                <div class="text-danger">{{ form.target_amount.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_deadline" class="form-label">Target Date</label>
+                            <input type="date" name="deadline" class="form-control" 
+                                   id="id_deadline" value="{{ form.deadline.value|date:'Y-m-d'|default_if_none:'' }}" required>
+                            {% if form.deadline.errors %}
+                                <div class="text-danger">{{ form.deadline.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Save Goal</button>
+                            <a href="{% url 'core:savings_goals' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

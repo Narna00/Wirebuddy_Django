@@ -1,0 +1,95 @@
+{% extends "partials/dashboard-base.html" %}
+{% load static %}
+{% block content %}
+
+<section class="dashboard-section body-collapse pay step step-2">
+  <div class="overlay pt-120">
+    <div class="container-fruid">
+      <div class="main-content">
+        <div class="head-area d-flex align-items-center justify-content-between">
+          <h4>Currency Converter</h4>
+          <div class="icon-area">
+            <img src="{% static 'assets1/images/icon/conversion.png' %}" alt="icon">
+          </div>
+        </div>
+
+        <form method="POST">
+          {% csrf_token %}
+          <div class="send-banance">
+            <span class="mdr">From Currency</span>
+            <div class="input-area">
+              <select name="from_currency" class="currency-select" style="width:100%;max-width:400px;">
+                {% for code, name in currencies %}
+                  <option value="{{ code }}">{{ code }} - {{ name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="send-banance">
+            <span class="mdr">To Currency</span>
+            <div class="input-area">
+              <select name="to_currency" class="currency-select" style="width:100%;max-width:400px;">
+                {% for code, name in currencies %}
+                  <option value="{{ code }}">{{ code }} - {{ name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="send-banance">
+            <span class="mdr">Amount</span>
+            <div class="input-area">
+              <input type="number" name="amount" step="0.01" placeholder="Enter amount" required>
+            </div>
+          </div>
+
+          {% if converted_amount %}
+            <div class="alert alert-success mt-3">
+              Converted Amount: <strong>{{ converted_amount }}</strong>
+            </div>
+          {% endif %}
+
+          <div class="footer-area mt-40">
+            <a href="#">Cancel</a>
+            <button type="submit" style="padding:10px 30px;border-radius:10px;background:rgb(98,0,255);color:#fff;" class="active">
+              Convert
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+
+
+<style>
+  /* Make dropdown scroll inside */
+  .currency-select {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    font-size: 14px;
+    max-height: 45px; /* Normal closed size */
+  }
+
+  /* Scrollable options */
+  .currency-select option {
+    padding: 8px;
+  }
+
+  /* On open — scrollable list */
+  select.currency-select:focus {
+    overflow-y: auto;
+  }
+
+  /* Force dropdown width to match container */
+  .currency-select {
+    box-sizing: border-box;
+  }
+</style>

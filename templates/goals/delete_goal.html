@@ -1,0 +1,40 @@
+{% extends 'partials/dashboard-base.html' %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-white text-danger">
+                    <h2 class="h5 mb-0">Delete Savings Goal</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Are you sure you want to delete this savings goal?
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ goal.name }}</h5>
+                            <div class="d-flex justify-content-between">
+                                <span>Target: ${{ goal.target_amount|intcomma }}</span>
+                                <span>Saved: ${{ goal.current_amount|intcomma }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">Yes, Delete Permanently</button>
+                            <a href="{% url 'core:savings_goals' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

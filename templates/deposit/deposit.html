@@ -1,0 +1,97 @@
+{% extends "partials/dashboard-base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<section class="dashboard-section body-collapse pay step step-2">
+  <div class="overlay pt-120">
+    <div class="container-fruid">
+      <div class="main-content">
+        <div class="head-area d-flex align-items-center justify-content-between">
+          <h4>Deposit Money</h4>
+          <div class="icon-area">
+            <img src="{% static 'assets1/images/icon/support.png' %}" alt="icon">
+          </div>
+        </div>
+        <div class="choose-recipient">
+          <div class="step-area">
+            <span class="mdr">Step 1 of 2</span>
+            <h5>Enter Amount to Deposit</h5>
+          </div>
+        </div>
+
+        <form action="{% url 'core:deposit' %}" method="POST">
+          {% csrf_token %}
+          <div class="send-banance">
+            <span class="mdr">Amount</span>
+            <div class="input-area">
+              <input
+                class="xxlr"
+                onkeyup="updateBalance()"
+                placeholder="{{ request.user.account.account_balance|intcomma }}"
+                type="number"
+                step="0.01"
+                name="amount"
+                id="amount-input"
+                required
+              >
+              <span class="currency">GHS</span>
+            </div>
+            <p>Available Balance <b>₵{{ request.user.account.account_balance|intcomma }}</b></p>
+            <p id="new-balance"></p>
+            <p class="text-danger" id="error-msg"></p>
+          </div>
+
+          <script>
+            function updateBalancePreview() {
+              const currentBalance = parseFloat("{{ request.user.account.account_balance }}".replace(/,/g, ''));
+              const depositAmount = parseFloat(document.getElementById('amount-input').value) || 0;
+              const newBalance = currentBalance + depositAmount;  // Changed to ADD instead of subtract
+              
+              const formatCurrency = (value) => {
+                return '₵' + value.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                });
+              };
+
+              document.getElementById('new-balance').innerHTML = 
+                `After Deposit: <b>${formatCurrency(newBalance)}</b>`;
+            }
+
+            // Initialize and add event listeners
+            document.addEventListener('DOMContentLoaded', function() {
+              updateBalancePreview();
+              document.getElementById('amount-input').addEventListener('input', updateBalancePreview);
+              
+              // Prevent negative deposits
+              document.getElementById('amount-input').addEventListener('change', function() {
+                if (this.value < 0) this.value = 0;
+                updateBalancePreview();
+              });
+            });
+          </script>
+
+          <ul class="total-fees">
+            <li>Fees</li>
+            <li>Free</li>
+          </ul>
+
+          <ul class="total-fees pay">
+            <li><h5>Total To Pay</h5></li>
+            <li><h5 id="total-to-pay">GHS 0.00</h5></li>
+          </ul>
+
+          <div class="footer-area mt-40">
+            <a href="{% url 'account:account' %}">Cancel</a>
+            <button
+              type="submit"
+              style="padding:10px 30px;border-radius:10px;background:rgb(98,0,255);color:#fff;"
+              class="active"
+            >Proceed to Paystack</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,48 @@
+{% extends "partials/dashboard-base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<section class="dashboard-section body-collapse">
+    <div class="overlay pt-120">
+        <div class="container-fruid">
+            <div class="main-content">
+                <div class="head-area d-flex align-items-center justify-content-between">
+                    <h4>Savings Goals</h4>
+                    <a href="{% url 'core:create_goal' %}" class="btn btn-primary" style="padding: 8px 20px; border-radius: 8px; background: rgb(98, 0, 255); color: #fff;">
+                        + Create Goal
+                    </a>
+                </div>
+
+                {% if goals %}
+                    {% for goal in goals %}
+                        <div class="goal-card" style="background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                            <h5 style="margin-bottom: 5px;">{{ goal.name }}</h5>
+                            <p class="text-muted">Target: ₵{{ goal.target_amount|intcomma }}</p>
+                            <p>Saved: <b>₵{{ goal.current_amount|intcomma }}</b></p>
+                            <p>Amount Left: ₵{{ goal.amount_left|intcomma }}</p>
+                            <p>Days Left: {{ goal.days_left }}</p>
+                            <p>Daily Saving Needed: ₵{{ goal.daily_saving_needed|floatformat:2|intcomma }}</p>
+
+                            <div class="progress" style="height: 15px; margin: 10px 0;">
+                                <div class="progress-bar" role="progressbar"
+                                    style="width: {{ goal.progress_percentage }}%; background: rgb(98, 0, 255);"
+                                    aria-valuenow="{{ goal.progress_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ goal.progress_percentage|floatformat:2 }}%
+                                </div>
+                            </div>
+
+                            <div class="d-flex" style="gap: 10px; margin-top: 10px;">
+                                <a href="{% url 'core:deposit_to_goal' goal.id %}" class="btn btn-success" style="padding: 5px 15px; border-radius: 8px;">Deposit</a>
+                                <a href="{% url 'core:withdraw_from_goal' goal.id %}" class="btn btn-warning" style="padding: 5px 15px; border-radius: 8px;">Withdraw</a>
+                                <a href="{% url 'core:delete_goal' goal.id %}" class="btn btn-danger" style="padding: 5px 15px; border-radius: 8px;">Delete</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No savings goals yet. <a href="{% url 'core:create_goal' %}">Create one</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

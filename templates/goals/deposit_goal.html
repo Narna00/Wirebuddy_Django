@@ -1,0 +1,51 @@
+{% extends "partials/dashboard-base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<section class="dashboard-section body-collapse pay">
+    <div class="overlay pt-120">
+        <div class="container-fruid">
+            <div class="main-content">
+                <div class="head-area d-flex align-items-center justify-content-between">
+                    <h4>Deposit to Goal</h4>
+                </div>
+
+                <div class="choose-recipient">
+                    <div class="user-select">
+                        <div class="single-user">
+                            <div class="left d-flex align-items-center">
+                                <div class="img-area">
+                                    <img src="{% static 'assets1/images/icon/goal.png' %}" style="width: 80px; height: 80px; border-radius: 50%; background: #eee;" alt="goal">
+                                </div>
+                                <div class="text-area">
+                                    <p><b>{{ goal.name }}</b></p>
+                                    <span class="mdr">Target: ₵{{ goal.target_amount|intcomma }}</span><br>
+                                    <span class="mdr">Saved: ₵{{ goal.current_amount|intcomma }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form action="{% url 'core:deposit_to_goal' goal.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="send-banance">
+                        <span class="mdr">Deposit Amount</span>
+                        <div class="input-area">
+                            <input class="xxlr" placeholder="Enter amount" type="number" name="amount" required>
+                            <select>
+                                <option>GHS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="footer-area mt-40">
+                        <a href="{% url 'core:goals_dashboard' %}">Cancel</a>
+                        <button type="submit" style="padding: 10px 30px; border-radius: 10px; background: rgb(98, 0, 255); color: #fff;">Deposit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

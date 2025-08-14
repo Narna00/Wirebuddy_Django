@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Make a Deposit</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="amount">Amount (₵)</label>
+      <input type="number" name="amount" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Proceed to Paystack</button>
+  </form>
+</div>
+
+{% for deposit in deposit_transaction %}
+<tr>
+  <td>{{ deposit.transaction_id }}</td>
+  <td>{{ deposit.amount }}</td>
+  <td>{{ deposit.timestamp }}</td>
+  <td>{{ deposit.status }}</td>
+</tr>
+{% endfor %}
+
+{% endblock %}
+
